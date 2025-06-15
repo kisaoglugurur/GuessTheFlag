@@ -7,6 +7,31 @@
 
 import SwiftUI
 
+struct Title: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .foregroundStyle(.secondary)
+            .font(.largeTitle)
+            .bold()
+    }
+}
+
+extension View {
+    func titleStyle() -> some View {
+        modifier(Title())
+    }
+}
+
+struct FlagImage: View {
+    var imageName: String
+    
+    var body: some View {
+        Image(imageName)
+            .clipShape(.rect(cornerRadius: 4))
+            .shadow(radius: 4)
+    }
+}
+
 struct ContentView: View {
     @State private var questionAsked: Int = 1
     @State private var gameState: Bool = true
@@ -33,25 +58,20 @@ struct ContentView: View {
             VStack {
                 Spacer()
                 Text("Guess the Flag")
-                    .font(.largeTitle.weight(.bold))
-                    .foregroundStyle(.white)
+                    .titleStyle()
 
                 VStack(spacing: 15) {
                     VStack {
                         Text("Tap the flag of")
-                            .font(.subheadline.weight(.heavy))
-                            .foregroundStyle(.secondary)
                         Text(countries[correctAnswer])
-                            .font(.largeTitle.weight(.semibold))
+                            .titleStyle()
                     }
                     
                     ForEach(0..<3) { number in
                         Button {
                             flagTapped(number)
                         } label: {
-                            Image(countries[number])
-                                .clipShape(RoundedRectangle(cornerRadius: 4))
-                                .shadow(radius: 4)
+                            FlagImage(imageName: countries[number])
                         }
                     }
                 }
